@@ -1,17 +1,18 @@
 import ROOT
 
 # Run5 for K1 analysis (BV @ 550V)
-#file = ROOT.TFile.Open("stats_Sr_Run5_Ch0-550V_Ch1-550V_Ch3-160V_trig5V.root")
-file = ROOT.TFile.Open("../stats_Sr_Run5_Ch0-500V_Ch1-500V_Ch3-200V_trig5V.root")
+file = ROOT.TFile.Open("../stats_Sr_Run5_Ch0-550V_Ch1-550V_Ch3-160V_trig5V.root")
+#file = ROOT.TFile.Open("../stats_Sr_Run5_Ch0-500V_Ch1-500V_Ch3-200V_trig5V.root")
+#file = ROOT.TFile.Open("../stats_Sr_Run5_Ch0-500V_Ch1-500V_Ch3-200V_trig5V.root")
 tree = file.Get("Analysis")
-BV="500"
+BV="550"
 
 # histograms for different pmax[4] cut thresholds
 hists = {
-    "pmax > 10": ROOT.TH1F("h_cut10", "K1 (half-irrad) area_new BV 500 & pmax > 10", 100, 0, 150),
-    "pmax > 15": ROOT.TH1F("h_cut15", "K1 (half-irrad) area_new BV 500 & pmax > 15", 100, 0, 200),
-    "pmax > 18": ROOT.TH1F("h_cut18", "K1 (half-irrad) area_new BV 500 & pmax > 18", 100, 0, 200),
-    "pmax > 20": ROOT.TH1F("h_cut20", "K1 (half-irrad) area_new BV 500 & pmax > 20", 100, 0, 200),
+    "pmax > 10": ROOT.TH1F("h_cut10", "K1 (half-irrad) area_new BV 550 & pmax > 10", 100, 0, 150),
+    "pmax > 15": ROOT.TH1F("h_cut15", "K1 (half-irrad) area_new BV 550 & pmax > 15", 100, 0, 200),
+    "pmax > 18": ROOT.TH1F("h_cut18", "K1 (half-irrad) area_new BV 550 & pmax > 18", 100, 0, 200),
+    "pmax > 20": ROOT.TH1F("h_cut20", "K1 (half-irrad) area_new BV 550 & pmax > 20", 100, 0, 200),
 }
 
 for event in tree:
@@ -63,7 +64,7 @@ for i, (label, hist) in enumerate(hists.items()):
     legends[label] = legend
 
 c1.Update()
-c1.SaveAs("hRun5_area_new_K1_half-irrad_bv-500_pmaxcut-5-25.png")
+c1.SaveAs("hRun5_area_new_K1_half-irrad_bv-550_pmaxcut-5-25.png")
 
 # Canvas 2: With extracted MPV & Q collection by Landau fitting
 c2 = ROOT.TCanvas("c2", "c2", 800, 700)
@@ -92,5 +93,5 @@ for i, (label, hist) in enumerate(hists.items()):
     legend.Draw()
 
 c2.Update()
-c2.SaveAs("hRun5_MPV_area_new_K1_half-irrad_bv-500_pmaxcut-5-25.png")
+c2.SaveAs("hRun5_MPV_area_new_K1_half-irrad_bv-550_pmaxcut-5-25.png")
 
