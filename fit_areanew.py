@@ -2,34 +2,35 @@ import ROOT
 
 # Run5 for K1 analysis (BV @ 550V)
 #file = ROOT.TFile.Open("stats_Sr_Run5_Ch0-550V_Ch1-550V_Ch3-160V_trig5V.root")
-file = ROOT.TFile.Open("stats_Sr_Run5_Ch0-500V_Ch1-500V_Ch3-200V_trig5V.root")
+file = ROOT.TFile.Open("../stats_Sr_Run5_Ch0-500V_Ch1-500V_Ch3-200V_trig5V.root")
 tree = file.Get("Analysis")
+BV="500"
 
 # histograms for different pmax[4] cut thresholds
 hists = {
+    "pmax > 10": ROOT.TH1F("h_cut10", "K1 (half-irrad) area_new BV 500 & pmax > 10", 100, 0, 150),
     "pmax > 15": ROOT.TH1F("h_cut15", "K1 (half-irrad) area_new BV 500 & pmax > 15", 100, 0, 200),
+    "pmax > 18": ROOT.TH1F("h_cut18", "K1 (half-irrad) area_new BV 500 & pmax > 18", 100, 0, 200),
     "pmax > 20": ROOT.TH1F("h_cut20", "K1 (half-irrad) area_new BV 500 & pmax > 20", 100, 0, 200),
-    "pmax > 25": ROOT.TH1F("h_cut25", "K1 (half-irrad) area_new BV 500 & pmax > 25", 100, 0, 200),
-    "pmax > 30": ROOT.TH1F("h_cut30", "K1 (half-irrad) area_new BV 500 & pmax > 30", 100, 0, 200),
 }
 
 for event in tree:
     if len(event.pmax) > 4 and len(event.area_new) > 4:
         val = event.area_new[4]
+        if event.pmax[4] > 10:
+            hists["pmax > 10"].Fill(val)
         if event.pmax[4] > 15:
             hists["pmax > 15"].Fill(val)
+        if event.pmax[4] > 18:
+            hists["pmax > 18"].Fill(val)
         if event.pmax[4] > 20:
             hists["pmax > 20"].Fill(val)
-        if event.pmax[4] > 25:
-            hists["pmax > 25"].Fill(val)
-        if event.pmax[4] > 30:
-            hists["pmax > 30"].Fill(val)
 
 colors = {
-    "pmax > 15": ROOT.kGreen+2,
-    "pmax > 20": ROOT.kYellow+1,
-    "pmax > 25": ROOT.kBlue,
-    "pmax > 30": ROOT.kBlack,
+    "pmax > 10": ROOT.kGreen+2,
+    "pmax > 15": ROOT.kYellow+1,
+    "pmax > 18": ROOT.kBlue,
+    "pmax > 20": ROOT.kBlack,
 }
 
 ROOT.gStyle.SetOptStat(0)
@@ -68,6 +69,7 @@ c1.SaveAs("hRun5_area_new_K1_half-irrad_bv-500_pmaxcut-5-25.png")
 c2 = ROOT.TCanvas("c2", "c2", 800, 700)
 c2.Divide(2,2)
 c2.SetLogy()
+print(f"Bias Voltage={BV}")
 
 for i, (label, hist) in enumerate(hists.items()):
     c2.cd(i+1)

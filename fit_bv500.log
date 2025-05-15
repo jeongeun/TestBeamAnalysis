@@ -1,0 +1,11 @@
+Info in <TCanvas::Print>: png file hRun5_area_new_K1_half-irrad_bv-500_pmaxcut-5-25.png has been created
+Info in <TCanvas::Print>: png file hRun5_MPV_area_new_K1_half-irrad_bv-500_pmaxcut-5-25.png has been created
+pmax > 10: peak at area_new[4] = 17.250
+pmax > 15: peak at area_new[4] = 19.000
+pmax > 18: peak at area_new[4] = 19.000
+pmax > 20: peak at area_new[4] = 19.000
+Bias Voltage=500
+pmax > 10: MPV = 19.403, MPV/4.7 = Q_collection = 4.128
+pmax > 15: MPV = 19.378, MPV/4.7 = Q_collection = 4.123
+pmax > 18: MPV = 19.624, MPV/4.7 = Q_collection = 4.175
+pmax > 20: MPV = 20.085, MPV/4.7 = Q_collection = 4.274
