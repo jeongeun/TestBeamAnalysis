@@ -1,50 +1,45 @@
 import ROOT
 
-# Run5 for K1 analysis (BV @ 450, 500, 525, 550V) Run6 ( BV 590V)
-#file = ROOT.TFile.Open("../stats_Sr_Run5_Ch0-450V_Ch1-450V_Ch3-140V_trig5V.root")
-#file = ROOT.TFile.Open("../stats_Sr_Run5_Ch0-500V_Ch1-500V_Ch3-200V_trig5V.root")
-#file = ROOT.TFile.Open("../stats_Sr_Run5_Ch0-525V_Ch1-525V_Ch3-180V_trig5V.root")
-#file = ROOT.TFile.Open("../stats_Sr_Run5_Ch0-550V_Ch1-550V_Ch3-160V_trig5V.root")
-file = ROOT.TFile.Open("../stats_Sr_Run6_Ch0-610V_Ch1-590V_Ch3-190V_trig5V.root")
+# Run5 for K1 analysis (BV @ 550V)
+file = ROOT.TFile.Open("stats_Sr_Run5_Ch0-550V_Ch1-550V_Ch3-160V_trig5V.root")
 tree = file.Get("Analysis")
-
-# set Bias Voltage (string type)
-BV="590"
 
 # histograms for different pmax[4] cut thresholds
 hists = {
-    "pmax > 10": ROOT.TH1F("h_cut10", "K1 (half-irrad) area_new BV"+BV+" &pmax > 10", 60, 0, 200),
-    "pmax > 15": ROOT.TH1F("h_cut15", "K1 (half-irrad) area_new BV"+BV+" & pmax > 15", 60, 0, 200),
-    "pmax > 18": ROOT.TH1F("h_cut18", "K1 (half-irrad) area_new BV"+BV+" & pmax > 18", 60, 0, 200),
-    "pmax > 20": ROOT.TH1F("h_cut20", "K1 (half-irrad) area_new BV"+BV+" & pmax > 20", 60, 0, 200),
+    "pmax > 10": ROOT.TH1F("h_cut10", "K1 (half-irrad) area_new BV 550 & pmax > 10", 100, 0, 200),
+    "pmax > 20": ROOT.TH1F("h_cut20", "K1 (half-irrad) area_new BV 550 & pmax > 20", 100, 0, 200),
+    "pmax > 25": ROOT.TH1F("h_cut25", "K1 (half-irrad) area_new BV 550 & pmax > 25", 100, 0, 200),
+    "pmax > 30": ROOT.TH1F("h_cut30", "K1 (half-irrad) area_new BV 550 & pmax > 30", 100, 0, 200),
 }
 
 for event in tree:
-    if len(event.pmax_fit) > 4 and len(event.area_new) > 4:
+    if len(event.pmax) > 4 and len(event.area_new) > 4:
         val = event.area_new[4]
-        if event.pmax_fit[4] > 10:
+        if event.pmax[4] > 10:
             hists["pmax > 10"].Fill(val)
-        if event.pmax_fit[4] > 15:
-            hists["pmax > 15"].Fill(val)
-        if event.pmax_fit[4] > 18:
-            hists["pmax > 18"].Fill(val)
-        if event.pmax_fit[4] > 20:
+        if event.pmax[4] > 20:
             hists["pmax > 20"].Fill(val)
+        if event.pmax[4] > 25:
+            hists["pmax > 25"].Fill(val)
+        if event.pmax[4] > 30:
+            hists["pmax > 30"].Fill(val)
 
 colors = {
     "pmax > 10": ROOT.kGreen+2,
-    "pmax > 15": ROOT.kYellow+1,
-    "pmax > 18": ROOT.kBlue,
-    "pmax > 20": ROOT.kBlack,
+    "pmax > 20": ROOT.kYellow+1,
+    "pmax > 25": ROOT.kBlue,
+    "pmax > 30": ROOT.kBlack,
 }
 
 ROOT.gStyle.SetOptStat(0)
 
 # Canvas1: draw 4 area_new with different pmax cuts
-c1 = ROOT.TCanvas("c1", "c1", 1000, 1000)
+c1 = ROOT.TCanvas("c1", "c1", 800, 700)
 c1.Divide(2,2)
 c1.SetLogy()
+
 legends ={}
+
 for i, (label, hist) in enumerate(hists.items()):
     c1.cd(i+1)
     hist.SetLineColor(colors[label])
@@ -66,13 +61,12 @@ for i, (label, hist) in enumerate(hists.items()):
     legends[label] = legend
 
 c1.Update()
-c1.SaveAs("hRun5_area_new_K1_half-irrad_bv-"+BV+"_pmaxcut.png")
+c1.SaveAs("hRun5_area_new_K1_half-irrad_bv-550_pmaxcut-5-25.png")
 
 # Canvas 2: With extracted MPV & Q collection by Landau fitting
 c2 = ROOT.TCanvas("c2", "c2", 800, 700)
 c2.Divide(2,2)
 c2.SetLogy()
-print(f"Bias Voltage={BV}")
 
 for i, (label, hist) in enumerate(hists.items()):
     c2.cd(i+1)
@@ -85,7 +79,7 @@ for i, (label, hist) in enumerate(hists.items()):
     print(f"{label}: MPV = {mpv:.3f}, MPV/4.7 = Q_collection = {mpv/4.7:.3f}")
     hist.Draw("same")
 
-    legend = ROOT.TLegend(0.2, 0.7, 0.88, 0.88)
+    legend = ROOT.TLegend(0.22, 0.7, 0.88, 0.88)
     legend.SetBorderSize(0)
     legend.SetFillStyle(0)
     legend.SetTextSize(0.054)
@@ -95,5 +89,5 @@ for i, (label, hist) in enumerate(hists.items()):
     legend.Draw()
 
 c2.Update()
-c2.SaveAs("hRun5_MPV_area_new_K1_half-irrad_bv-"+BV+"_pmaxcut.png")
+c2.SaveAs("hRun5_MPV_area_new_K1_half-irrad_bv-550_pmaxcut-5-25.png")
 
