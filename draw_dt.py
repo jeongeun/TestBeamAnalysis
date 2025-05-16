@@ -25,89 +25,100 @@ import ROOT
 #file = ROOT.TFile.Open("../stats_Sr_Run4_Ch0-550V_Ch1-550V_Ch2-310V_Ch3-100V_trig5V.root")
 file = ROOT.TFile.Open("../stats_Sr_Run5_Ch0-550V_Ch1-550V_Ch3-160V_trig5V.root")
 tree = file.Get("Analysis")
+BV="550"
+# define histograms for delta T btw 2 channels (at cfd = 20%)
 
-# define histograms
-hcfd_ch0 = ROOT.TH1F("h_cfd1", "Run5: CFD(20%) of Ch-0 MCP trigger @ BV 550", 200, -30, 30)
-hcfd_ch3 = ROOT.TH1F("h_cfd2", "Run5: CFD(20%) of Ch-3 full-irrad K1 @ BV 550", 200, -30, 30)
-hcfd_ch4 = ROOT.TH1F("h_cfd3", "Run5: CFD(20%) of Ch-4 half-irrad K1 @ BV 550", 200, -30, 30)
-hcfd_ch5 = ROOT.TH1F("h_cfd4", "Run5: CFD(20%) of Ch-5 HPK 1 @ BV 550", 200, -30, 30)
-hcfd_ch6 = ROOT.TH1F("h_cfd5", "Run5: CFD(20%) of Ch-6 HPK 2 @ BV 550", 200, -30, 30)
-hcfd_ch7 = ROOT.TH1F("h_cfd6", "Run5: CFD(20%) of Ch-7 HPK 3 @ BV 550", 200, -30, 30)
+hdt_ch0_3 = ROOT.TH1F("hdt01", "Run5: CFD(20%) of Ch0 - Ch3 (MCP - K1 full-irrad) @ BV "+BV, 60, -5, 5)
+hdt_ch0_4 = ROOT.TH1F("hdt02", "Run5: CFD(20%) of Ch0 - Ch4 (MCP - K1 half-irrad) @ BV "+BV, 60, -5, 5)
+hdt_ch0_5 = ROOT.TH1F("hdt03", "Run5: CFD(20%) of Ch0 - Ch5 (MCP - HPK1) @ BV "+BV, 60, -5, 5)
+hdt_ch0_6 = ROOT.TH1F("hdt04", "Run5: CFD(20%) of Ch0 - Ch6 (MCP - HPK2) @ BV "+BV, 60, -5, 5)
+hdt_ch0_7 = ROOT.TH1F("hdt05", "Run5: CFD(20%) of Ch0 - Ch7 (MCP - HPK3) @ BV "+BV, 60, -5, 5)
+#---
+hdt_ch3_4 = ROOT.TH1F("hdt06", "Run5: CFD(20%) of Ch3 - Ch4 (K1 full-irrad - K1 half-irrad) @ BV "+BV, 60, -5, 5)
+hdt_ch3_5 = ROOT.TH1F("hdt07", "Run5: CFD(20%) of Ch3 - Ch5 (K1 full-irrad - HPK1) @ BV "+BV, 60, -5, 5)
+hdt_ch3_6 = ROOT.TH1F("hdt08", "Run5: CFD(20%) of Ch3 - Ch6 (K1 full-irrad - HPK2) @ BV "+BV, 60, -5, 5)
+hdt_ch3_7 = ROOT.TH1F("hdt09", "Run5: CFD(20%) of Ch3 - Ch7 (K1 full-irrad - HPK3) @ BV "+BV, 60, -5, 5)
+#---
+hdt_ch4_5 = ROOT.TH1F("hdt10", "Run5: CFD(20%) of Ch4 - Ch5 (K1 half-irrad - HPK1) @ BV "+BV, 60, -5, 5)
+hdt_ch4_6 = ROOT.TH1F("hdt11", "Run5: CFD(20%) of Ch4 - Ch6 (K1 half-irrad - HPK2) @ BV "+BV, 60, -5, 5)
+hdt_ch4_7 = ROOT.TH1F("hdt12", "Run5: CFD(20%) of Ch4 - Ch6 (K1 half-irrad - HPK3) @ BV "+BV, 60, -5, 5)
+#---
+hdt_ch5_6 = ROOT.TH1F("hdt13", "Run5: CFD(20%) of Ch5 - Ch6 (HPK1 - HPK2) @ BV "+BV, 60, -5, 5)
+hdt_ch5_7 = ROOT.TH1F("hdt14", "Run5: CFD(20%) of Ch5 - Ch7 (HPK1 - HPK3) @ BV "+BV, 60, -5, 5)
+#---
+hdt_ch6_7 = ROOT.TH1F("hdt15", "Run5: CFD(20%) of Ch6 - Ch7 (HPK2 - HPK3) @ BV "+BV, 60, -5, 5)
 
-hdt_12 = ROOT.TH1F("h_dt12", "Run5: dt_12 = t(Ch-0) - t(Ch-4)  @ BV 550", 200, -10, 10)
-hdt_13 = ROOT.TH1F("h_dt13", "Run5: dt_13 = t(Ch-0) - t(Ch-5)  @ BV 550", 200, -10, 10)
-hdt_23 = ROOT.TH1F("h_dt23", "Run5: dt_23 = t(Ch-4) - t(Ch-5)  @ BV 550", 200, -10, 10)
 
 # hist list
-hcfd_list = [
-    ("Ch-0 MCP",  hcfd_ch0, ROOT.kBlack),
-    ("Ch-3 K1 full-irrad", hcfd_ch3, ROOT.kBlue),
-    ("Ch-4 K1 half-irrad", hcfd_ch4, ROOT.kRed),
-    ("Ch-5 HPK 1", hcfd_ch5, ROOT.kGreen+2),
-    ("Ch-6 HPK 2", hcfd_ch6, ROOT.kMagenta),
-    ("Ch-7 HPK 3", hcfd_ch7, ROOT.kOrange+7)
-]
+hists = {
+        "Ch0-3: MCP - K1_fullIR":       (hdt_ch0_3, ROOT.kBlack),
+        "Ch0-4: MCP - K1_halfIR":       (hdt_ch0_4, ROOT.kBlack),
+        "Ch0-5: MCP - HPK1":            (hdt_ch0_5, ROOT.kBlack),
+        "Ch0-6: MCP - HPK2":            (hdt_ch0_6, ROOT.kBlack),
+        "Ch0-7: MCP - HPK3":            (hdt_ch0_7, ROOT.kBlack),
+        "Ch3-4: K1_fullIR - K1_halfIR": (hdt_ch3_4, ROOT.kBlue),
+        "Ch3-5: K1_fullIR - HPK1":      (hdt_ch3_5, ROOT.kBlue),
+        "Ch3-6: K1_fullIR - HPK2":      (hdt_ch3_6, ROOT.kBlue),
+        "Ch3-7: K1_fullIR - HPK3":      (hdt_ch3_7, ROOT.kBlue),
+        "Ch4-5: K1_halfIR - HPK1":      (hdt_ch4_5, ROOT.kYellow+2),
+        "Ch4-6: K1_halfIR - HPK2":      (hdt_ch4_6, ROOT.kYellow+2),
+        "Ch4-7: K1_halfIR - HPK3":      (hdt_ch4_7, ROOT.kYellow+2),
+        "Ch5-6: HPK1 - HPK2":           (hdt_ch5_6, ROOT.kOrange+7),
+        "Ch5-7: HPK1 - HPK3":           (hdt_ch5_7, ROOT.kOrange+7),
+        "Ch6-7: HPK2 - HPK3":           (hdt_ch6_7, ROOT.kOrange+2),
+}
 
+#event loop  
+# fill histogram with dT using cdf[channel][ 0(=10%), *1(=20%)*, .. 6(=70%)]
 for event in tree:
-    if len(event.pmax) > 5 and (event.pmax_fit[4] > 15):
-        hcfd_ch0.Fill(event.cfd[0][1]) # Ch-1 MCP with cfd=20%
-        hcfd_ch3.Fill(event.cfd[3][1]) # Ch-3 K1(full-irrad) with cfd=20%
-        hcfd_ch4.Fill(event.cfd[4][1]) # Ch-4 K1(half-irrad) with cfd=20%
-        hcfd_ch5.Fill(event.cfd[5][1]) # Ch-5 HPK with cfd=20%
-        hcfd_ch6.Fill(event.cfd[6][1]) # Ch-6 HPK with cfd=20%
-        hcfd_ch7.Fill(event.cfd[7][1]) # Ch-7 HPK with cfd=20%
+    if len(event.pmax) > 5 and (event.pmax_fit[4] > 5):
+        hdt_ch0_3.Fill((event.cfd[0][1] - event.cfd[3][1])) #dt MCP - K1full
+        hdt_ch0_4.Fill((event.cfd[0][1] - event.cfd[4][1])) #dt MCP - K1half
+        hdt_ch0_5.Fill((event.cfd[0][1] - event.cfd[5][1])) #dt MCP - HPK1
+        hdt_ch0_6.Fill((event.cfd[0][1] - event.cfd[6][1])) #dt MCP - HPK2
+        hdt_ch0_7.Fill((event.cfd[0][1] - event.cfd[7][1])) #dt MCP - HPK3
+        hdt_ch3_4.Fill((event.cfd[3][1] - event.cfd[4][1])) #dt K1full - K1half
+        hdt_ch3_5.Fill((event.cfd[3][1] - event.cfd[5][1])) #dt K1full - HPK1
+        hdt_ch3_6.Fill((event.cfd[3][1] - event.cfd[6][1])) #dt K1full - HPK2
+        hdt_ch3_7.Fill((event.cfd[3][1] - event.cfd[7][1])) #dt K1full - HPK3
+        hdt_ch4_5.Fill((event.cfd[4][1] - event.cfd[5][1])) #dt K1half - HPK1
+        hdt_ch4_6.Fill((event.cfd[4][1] - event.cfd[6][1])) #dt K1half - HPK2
+        hdt_ch4_7.Fill((event.cfd[4][1] - event.cfd[7][1])) #dt K1half - HPK3
+        hdt_ch5_6.Fill((event.cfd[5][1] - event.cfd[6][1])) #dt HPK1 - HPK2
+        hdt_ch5_7.Fill((event.cfd[5][1] - event.cfd[7][1])) #dt HPK1 - HPK3
+        hdt_ch6_7.Fill((event.cfd[6][1] - event.cfd[7][1])) #dt HPK2 - HPK3
 
-        hdt_12.Fill((event.cfd[0][1] - event.cfd[4][1])) #time diff btw MCP - K1#2
-        hdt_13.Fill((event.cfd[0][1] - event.cfd[5][1])) #time diff btw MCP - HPK#1
-        hdt_23.Fill((event.cfd[4][1] - event.cfd[5][1])) #time diff btw K1#2 - HPK#1
+ROOT.gStyle.SetOptStat(111111)
 
-ROOT.gStyle.SetOptStat(0)
-
-#canvas1: hcfd of MCP, K1#2, and HPK#1
-c1 = ROOT.TCanvas("c1", "c1", 800, 700)
+# Canvas1: draw 4 area_new with different pmax cuts
+c1 = ROOT.TCanvas("c1", "c1", 2000, 1500)
+c1.Divide(5,3)
 c1.SetLogy()
+legends ={}
+for i, (label, (hist, color)) in enumerate(hists.items()):
+    c1.cd(i+1)
+    hist.SetLineColor(color)
 
-hcfd_1_20.SetLineColor(ROOT.kGreen+2)
-hcfd_2_20.SetLineColor(ROOT.kRed+3)
-hcfd_3_20.SetLineColor(ROOT.kBlue+2)
+    # Gaussian fit in range (@ypark please change this range!!)
+    fit = ROOT.TF1(f"gaus_{label}", "gaus", -5, 5)  # fit range
+    hist.Fit(fit, "RQ")  # R = fit within defined range, Q = quiet
+    mean = fit.GetParameter(1)   # mean of Gaussian
+    sigma = fit.GetParameter(2)  # sigma of Gaussian
 
-hcfd_1_20.GetXaxis().SetTitle("Time (CFD 20%)")
-hcfd_1_20.GetYaxis().SetTitle("Events")
-hcfd_1_20.GetXaxis().SetTitleSize(0.04)
-hcfd_1_20.GetYaxis().SetTitleSize(0.04)
-hcfd_1_20.Draw("hist")
-hcfd_2_20.Draw("hist same")
-hcfd_3_20.Draw("hist same")
+    hist.GetXaxis().SetTitle("#delta T (ns)")
+    hist.GetYaxis().SetTitle("Events")
+    hist.GetXaxis().SetTitleSize(0.045)
+    hist.GetYaxis().SetTitleSize(0.045)
+    hist.Draw("hist same")
 
-legend = ROOT.TLegend(0.5, 0.66, 0.88, 0.88)
-legend.SetBorderSize(0)
-legend.SetTextSize(0.02)
-legend.AddEntry(hcfd_1_20, "Ch-0: MCP Timing @ 550V", "l")
-legend.AddEntry(hcfd_2_20, "Ch-4: K1 half-irrad @ 550V", "l")
-legend.AddEntry(hcfd_3_20, "Ch-5: HPK @ 550V", "l")
-legend.Draw()
+    legend = ROOT.TLegend(0.1, 0.75, 0.4, 0.88)
+    legend.SetBorderSize(0)
+    legend.SetTextSize(0.05)
+    legend.AddEntry(hist, f"{label}, #mu = {mean:.2f}, #sigma = {sigma:.2f}", "l")
+    legend.AddEntry(0, f"#mu = {mean:.2f}", "l")
+    legend.AddEntry(0, f"#sigma = {sigma:.2f}", "l")
+    legend.Draw()
+    legends[label] = legend
 
 c1.Update()
-c1.SaveAs("hRun5_timing_cfd20_bv550.png")
-
-
-#canvas2: (pmax[4]-pmad_fit[4]) / pmax[4]
-
-c2 = ROOT.TCanvas("c2", "c2", 800, 700)
-c2.SetLogy()
-#ROOT.gStyle.SetOptStat(1111111)
-
-hdt_12.SetLineColor(ROOT.kBlack)
-hdt_13.SetLineColor(ROOT.kBlue)
-hdt_23.SetLineColor(ROOT.kRed)
-
-hdt_12.GetXaxis().SetTitle("Time difference")
-hdt_12.GetYaxis().SetTitle("Events")
-hdt_12.GetXaxis().SetTitleSize(0.04)
-hdt_12.GetYaxis().SetTitleSize(0.035)
-hdt_12.Draw("hist")
-hdt_13.Draw("hist same")
-hdt_23.Draw("hist same")
-
-c2.Update()
-c2.SaveAs("hRun5_dT_bv550.png")
+c1.SaveAs("hdT_bv-"+BV+"_allchannels.png")
